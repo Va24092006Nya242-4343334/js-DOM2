@@ -1,54 +1,21 @@
-const gallery = document.getElementById("gallery");
-let currentPage = 1;
-const imagesPerRow = 4;
+import { fetchImages } from './module/api.js';
+import { displayImages, clearGallery, removeLastImage, reverseGallery } from './module/gallery.js';
 
-async function fetchImages(page) {
-    try {
-        const response = await fetch(`https://picsum.photos/v2/list?page=${page}&limit=${imagesPerRow}`);
-        const images = await response.json();
-        displayImages(images);
-    } catch (error) {
-        console.error("Помилка завантаження зображень", error);
-    }
+const loadMoreButton = document.getElementById('loadMore');
+const clearGalleryButton = document.getElementById('clearGallery');
+const removeLastButton = document.getElementById('removeLast');
+const reverseGalleryButton = document.getElementById('reverseGallery');
+
+const imageCount = 4;
+
+async function loadImages(count) {
+  const images = await fetchImages(count);
+  displayImages(images);
 }
 
-function displayImages(images) {
-    images.forEach((image) => {
-        const imgElement = document.createElement("img");
-        imgElement.src = image.download_url;
-        imgElement.alt = "Random image";
-        gallery.appendChild(imgElement);
-    });
-}
+loadImages(imageCount);
 
-fetchImages(currentPage);
-
-document.getElementById("loadMore").addEventListener("click", async () => {
-    currentPage++;
-    await fetchImages(currentPage);
-});
-
-document.getElementById("clearGallery").addEventListener("click", () => {
-    gallery.innerHTML = "";
-    currentPage = 1;
-});
-
-document.getElementById("removeLast").addEventListener("click", () => {
-    const images = gallery.getElementsByTagName("img");
-    if (images.length > 0) {
-        gallery.removeChild(images[images.length - 1]);
-    }
-});
-
-document.getElementById("reverseGallery").addEventListener("click", () => {
-    const images = Array.from(gallery.children);
-    gallery.innerHTML = "";
-    images.reverse().forEach((img) => gallery.appendChild(img));
-});
-
-document.getElementById("shuffleGallery").addEventListener("click", () => {
-    const images = Array.from(gallery.children);
-    gallery.innerHTML = "";
-    images.sort(() => Math.random() - 0.5);
-    images.forEach((img) => gallery.appendChild(img));
-});
+loadMoreButton.addEventListener('click', () => loadImages(imageCount));
+clearGalleryButton.addEventListener('click', clearGallery);
+removeLastButton.addEventListener('click', removeLastImage);
+reverseGalleryButton.addEventListener('click', reverseGallery);
