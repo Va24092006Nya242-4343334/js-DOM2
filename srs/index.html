@@ -1,26 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Галерея картинок</title>
-    <link rel="stylesheet" href="./ctyles.css" />
-  </head>
-  <body>
-    <h1>Галерея картинок</h1>
-    <div class="gallery" id="gallery"></div>
-    <div class="controls">
-      <button id="loadMore">Завантажити ще 4 картинки</button>
-      <button id="clear">Очистити</button>
-      <button id="removeLast">Видалити останню картинку</button>
-      <button id="reverse">Перевернути галерею</button>
-    </div>
-    <div class="fullscreen-view" id="fullscreenView">
-      <span class="close" id="closeFullscreen">&times;</span>
-      <button class="nav prev" id="prev">&#10094;</button>
-      <img src="" alt="Full image" id="fullscreenImage" />
-      <button class="nav next" id="next">&#10095;</button>
-    </div>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/srs/ctyles.css">
+    <title>Галерея фотографій</title>
+</head>
+<body>
+    <header>
+        <h1>FOTO IMAGE</h1>
+    </header>
+    <main>
+        <div id="gallery" class="gallery"></div>
+        <div class="buttons">
+            <button id="loadMore">Завантажити ще 4 картинки</button>
+            <button id="clearGallery">Очистити галерею</button>
+            <button id="removeLast">Видалити останню картинку</button>
+            <button id="reverseGallery">Перевернути галерею</button>
+            <button id="shuffleGallery">Перемішати галерею</button>
+        </div>
+    </main>
     <script src="/srs/script.js"></script>
-  </body>
+</body>
 </html>

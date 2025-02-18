@@ -1,69 +1,54 @@
 const gallery = document.getElementById("gallery");
-const loadMoreBtn = document.getElementById("loadMore");
-const clearBtn = document.getElementById("clear");
-const removeLastBtn = document.getElementById("removeLast");
-const reverseBtn = document.getElementById("reverse");
-const fullscreenView = document.getElementById("fullscreenView");
-const fullscreenImage = document.getElementById("fullscreenImage");
-const closeFullscreenBtn = document.getElementById("closeFullscreen");
-const nextBtn = document.getElementById("next");
-const prevBtn = document.getElementById("prev");
+let currentPage = 1;
+const imagesPerRow = 4;
 
-let currentIndex = 0;
-
-async function loadImages(count = 4) {
-  const response = await fetch(`https://picsum.photos/v2/list?page=1&limit=${count}`);
-  const images = await response.json();
-  images.forEach((imgData) => {
-    const img = document.createElement("img");
-    img.src = imgData.download_url;
-    img.alt = imgData.author;
-    img.dataset.index = gallery.children.length;
-    gallery.appendChild(img);
-  });
+async function fetchImages(page) {
+    try {
+        const response = await fetch(`https://picsum.photos/v2/list?page=${page}&limit=${imagesPerRow}`);
+        const images = await response.json();
+        displayImages(images);
+    } catch (error) {
+        console.error("Помилка завантаження зображень", error);
+    }
 }
 
-gallery.addEventListener("click", (e) => {
-  if (e.target.tagName === "IMG") {
-    const imgIndex = parseInt(e.target.dataset.index);
-    openFullscreen(imgIndex);
-  }
-});
-
-function openFullscreen(index) {
-  currentIndex = index;
-  fullscreenImage.src = gallery.children[index].src;
-  fullscreenView.style.display = "flex";
+function displayImages(images) {
+    images.forEach((image) => {
+        const imgElement = document.createElement("img");
+        imgElement.src = image.download_url;
+        imgElement.alt = "Random image";
+        gallery.appendChild(imgElement);
+    });
 }
 
-closeFullscreenBtn.addEventListener("click", () => {
-  fullscreenView.style.display = "none";
+fetchImages(currentPage);
+
+document.getElementById("loadMore").addEventListener("click", async () => {
+    currentPage++;
+    await fetchImages(currentPage);
 });
 
-nextBtn.addEventListener("click", () => {
-  currentIndex = (currentIndex + 1) % gallery.children.length;
-  fullscreenImage.src = gallery.children[currentIndex].src;
+document.getElementById("clearGallery").addEventListener("click", () => {
+    gallery.innerHTML = "";
+    currentPage = 1;
 });
 
-prevBtn.addEventListener("click", () => {
-  currentIndex = (currentIndex - 1 + gallery.children.length) % gallery.children.length;
-  fullscreenImage.src = gallery.children[currentIndex].src;
+document.getElementById("removeLast").addEventListener("click", () => {
+    const images = gallery.getElementsByTagName("img");
+    if (images.length > 0) {
+        gallery.removeChild(images[images.length - 1]);
+    }
 });
 
-clearBtn.addEventListener("click", () => {
-  gallery.innerHTML = "";
-  currentIndex = 0;
+document.getElementById("reverseGallery").addEventListener("click", () => {
+    const images = Array.from(gallery.children);
+    gallery.innerHTML = "";
+    images.reverse().forEach((img) => gallery.appendChild(img));
 });
 
-loadMoreBtn.addEventListener("click", () => {
-  loadImages(4);
+document.getElementById("shuffleGallery").addEventListener("click", () => {
+    const images = Array.from(gallery.children);
+    gallery.innerHTML = "";
+    images.sort(() => Math.random() - 0.5);
+    images.forEach((img) => gallery.appendChild(img));
 });
-
-removeLastBtn.addEventListener("click", () => {
-  if (gallery.children.length > 0) {
-    gallery.removeChild(gallery.lastElementChild);
-  }
-});
-
-reverseBtn.addEventListener("click", () => {
-  const images = Array.from(gallery
